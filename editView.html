@@ -9,7 +9,7 @@
 		</div>
 		<div class="col-xs-10 form-inline form-group-sm">
 			<div class=" row">
-				<label class="col-xs-3">Protein</label>
+				<label class="col-xs-3">Protein %</label>
 				<input class="form-control" type="number" ng-model="hay.protMin" ng-change="field.calculate()" style="width:72px;"/>
 				to
 				<input class="form-control" type="number" ng-model="hay.protMax" ng-change="field.calculate()" style="width:72px;"/>
@@ -39,11 +39,11 @@
 				<input class="form-control col-xs-4" type="number" ng-model="field.data.lab.lbs" ng-change="field.calculate()" />
 			</div>
 			<div class=" row">
-				<label class="col-xs-3">Dry Matter</label>
+				<label class="col-xs-3">Dry Matter %</label>
 				<input class="form-control col-xs-4" type="number" ng-model="field.data.lab.dm" ng-change="field.calculate()" />
 			</div>
 			<div class=" row">
-				<label class="col-xs-3">Protein</label>
+				<label class="col-xs-3">Protein %</label>
 				<input class="form-control col-xs-4" type="number" ng-model="field.data.lab.prot" ng-change="field.calculate()" />
 			</div>
 			<div class=" row">
@@ -121,6 +121,11 @@
 				<input class="form-control col-xs-4" readonly value="{{field.data.totalCost | currency:'$':2}}" />
 			</div>
 			<br/>
+			<div class=" row lead">
+				<label class="col-xs-3">Farmer's %</label>
+				<input class="form-control col-xs-4"ng-model="field.data.sharePct" />
+			</div>
+
 			<div class=" row lead">
 				<label class="col-xs-3">{{field.data.sharePct|percentage}} to Farmer</label>
 				<input class="form-control col-xs-4" readonly value="{{field.data.shareCost | currency:'$':2}}" />
