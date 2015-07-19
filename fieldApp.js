@@ -49,6 +49,15 @@
 		sharePct: 0.2
 	};
 
+	if (window.localStorage) {
+		var str = localStorage.getItem("fieldData");
+		if (str) {
+			var data = JSON.parse(str);
+			_.assign(fieldData,data);
+		}
+	}
+
+
 	var app = angular.module('fieldApp', ['ngRoute']);
 
 	app.config(function($routeProvider){
@@ -67,7 +76,11 @@
 	app.controller('editCtrl', function(fieldService){
 		var fieldVm = this;
 		fieldVm.data = fieldData;
-		fieldVm.calculate = function(){calculate(fieldData);};
+		fieldVm.calculate = function(){
+			calculate(fieldData);
+			// probably not the correct place for this
+			localStorage.setItem("fieldData", JSON.stringify(fieldData));
+		};
 
 		calculate(fieldData);
 
