@@ -1,0 +1,150 @@
+<!doctype html>
+<html ng-app='fieldApp'>
+	<head>
+		<title>DiamondB Field Report</title>
+
+		<link rel="stylesheet" href="./bootstrap.css">
+		<link rel="stylesheet" href="./print-theme.css">
+
+	</head>
+	<body>
+		<div class="container-fluid" ng-controller="fieldCtrl as field">
+			<h1>{{field.data.title}}</h1>
+			<h2><input class="form-control" ng-model="field.data.desc" /></h2>
+			<hr/>
+			<div class="row" ng-repeat="hay in field.data.hayTypes">
+				<div class="col-xs-2">
+					<strong>{{hay.title}}</strong>
+				</div>
+				<div class="col-xs-10 form-inline form-group-sm">
+					<div class=" row">
+						<label class="col-xs-3">Protein</label>
+						<input class="form-control" type="number" ng-model="hay.protMin" ng-change="field.calculate()" style="width:72px;"/>
+						to
+						<input class="form-control" type="number" ng-model="hay.protMax" ng-change="field.calculate()" style="width:72px;"/>
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Delivered $</label>
+						<input class="form-control col-xs-4" type="number" ng-model="hay.deliver" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">lbs * DM * Protein </label>
+						<input readonly class="form-control col-xs-4" value="{{hay.lbsPerProt|number:0}}" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Base per lb. Protein $</label>
+						<input readonly class="form-control col-xs-4" value="{{hay.basePrice | currency:'$':4}}" />
+					</div>
+					<hr/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-2">
+					<h4>Lab Test</h4>
+				</div>
+				<div class="col-xs-10 form-inline">
+					<div class=" row">
+						<label class="col-xs-3">Lbs. Hay</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.lab.lbs" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Dry Matter</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.lab.dm" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Protein</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.lab.prot" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">lbs protein per ton of Haylage</label>
+						<input class="form-control col-xs-4" readonly ng-model="field.data.lab.protPerTon"  />
+					</div>
+				</div>
+			</div>
+			<hr/>
+			<div class="row">
+				<div class="col-xs-2">
+					<h4>Processing Costs</h4>
+				</div>
+				<div class="col-xs-10 form-inline">
+					<div class=" row">
+						<label class="col-xs-3">Swathing Tons</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.swathTons" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Swathing Acres</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.swathAcre" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Tons/Acre</label>
+						<input class="form-control col-xs-4" type="number" value="{{field.data.tonPerAcre | number:4}}" readonly />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Swatch Cost Per Acre</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.swatchCost" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Cost per Acre</label>
+						<input class="form-control col-xs-4" readonly value="{{field.data.costPerAcre | currency:'$':2}}" />
+					</div>
+					<br/>
+					<div class=" row">
+						<label class="col-xs-3">Chopping & Bagging $</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.chop" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Additional Mileage $</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.mileage" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Innoculant $</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.innoculant" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Protein, ADF Test $</label>
+						<input class="form-control col-xs-4" type="number" ng-model="field.data.adfTest" ng-change="field.calculate()" />
+					</div>
+					<div class=" row">
+						<label class="col-xs-3">Total Costs per Ton</label>
+						<input class="form-control col-xs-4" readonly value="{{field.data.costPerTon | currency:'$':4}}" />
+					</div>
+					<br/>
+					<div class=" row">
+						<label class="col-xs-3">Cost per lbs Protein</label>
+						<input class="form-control col-xs-4" readonly value="{{field.data.costPerProt | currency:'$':4}}" />
+					</div>
+
+					<div class=" row">
+						<label class="col-xs-3">Cost per lbs Protein</label>
+						<input class="form-control col-xs-4" readonly value="{{field.data.costLbProt | currency:'$':4}}" />
+					</div>
+
+					<div class=" row">
+						<label class="col-xs-3">Price of Hay per Ton</label>
+						<input class="form-control col-xs-4" readonly value="{{field.data.costHayPerTon | currency:'$':2}}" />
+					</div>
+
+					<hr/>
+					<div class=" row lead">
+						<label class="col-xs-3">Total Cost</label>
+						<input class="form-control col-xs-4" readonly value="{{field.data.totalCost | currency:'$':2}}" />
+					</div>
+					<br/>
+					<div class=" row lead">
+						<label class="col-xs-3">{{field.data.sharePct|percentage}} to Farmer</label>
+						<input class="form-control col-xs-4" readonly value="{{field.data.shareCost | currency:'$':2}}" />
+					</div>
+
+
+				</div>
+			</div>
+
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/2.0.7/bignumber.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+		<script src="./fieldApp.js"></script>
+
+	</body>
+</html>
