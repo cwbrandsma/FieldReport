@@ -28,9 +28,9 @@
 			deliver: 230.0
 		},
 		{
-			title: "Dy Cow/Feedher Hay",
-			protMin: 0.21,
-			protMax: 0.19,
+			title: "Dry Cow/Feeder Hay",
+			protMin: 0.19,
+			protMax: 0.21,
 			deliver: 220.0
 		}],
 		lab: {
@@ -49,68 +49,41 @@
 		sharePct: 0.2
 	};
 
-	var app = angular.module('fieldApp', []);
+	var app = angular.module('fieldApp', ['ngRoute']);
 
-	app.controller('fieldCtrl', function(fieldService){
+	app.config(function($routeProvider){
+		$routeProvider
+			.when('/', {
+				controller:"editCtrl as field",
+				templateUrl:"editView.html"
+			})
+			.when("/print", {
+				controller:"printCtrl as field",
+				templateUrl:"printView.html"
+			})
+			.otherwise({redirectTo:'/'});
+	});
+
+	app.controller('editCtrl', function(fieldService){
 		var fieldVm = this;
 		fieldVm.data = fieldData;
-		fieldVm.calculate = calculate;
+		fieldVm.calculate = function(){calculate(fieldData);};
 
-		calculate();
+		calculate(fieldData);
 
 		return fieldVm;
+	});
 
-		function calculate(){
-			console.log("calculating values");
-			calcHayTypes();
-			calcLab();
-			calcProcessing();
-		}
+	app.controller('printCtrl', function(fieldService){
+		var fieldVm = this;
+		fieldVm.data = fieldData;
 
-		function calcHayTypes(){
-			_.each(fieldData.hayTypes, function(h){
-				var pmin = new BigNumber(h.protMin);
-				var pmax = new BigNumber(h.protMax);
-				var avgProt = pmin.add(pmax).dividedBy(2); // (h.protMin + h.protMax) / 2;
+		calculate(fieldData);
 
+		var hay = findHayForLabProt(fieldData);
+		fieldData.selectedHayType = [hay];
 
-				h.lbsPerProt = fieldData.hayLbs * fieldData.dm * avgProt;
-				h.basePrice = h.deliver / h.lbsPerProt;
-			});
-		}
-
-		function calcLab(){
-			var lab = fieldData.lab;
-			lab.protPerTon = lab.lbs * lab.dm * lab.prot;
-		}
-
-		function calcProcessing(){
-			var d = fieldData;
-			var basePrice = getHayBasePrice(d.prot);
-
-			d.tonPerAcre = d.swathTons / d.swathAcre;
-			d.costPerAcre = d.swatchCost / d.tonPerAcre;
-			d.costPerTon = d.costPerAcre + d.chop + d. mileage + d.innoculant + d.adfTest;
-			d.costPerProt = d.costPerTon / d.lab.protPerTon;
-			d.costLbProt = basePrice - d.costPerProt;
-
-			d.costHayPerTon = d.costLbProt * d.lab.protPerTon;
-
-			d.totalCost = d.costHayPerTon * d.swathTons;
-
-			d.shareCost = d.totalCost * d.sharePct;
-		}
-
-		function getHayBasePrice(labProt){
-			var hay = _.find(fieldData.hayTypes, function(h){
-				return h.pmin >= labProt && h.pmax < labProt;
-			});
-			if (!hay){
-				hay = _.first(fieldData.hayTypes);
-			}
-			return hay.basePrice;
-		}
-
+		return fieldVm;
 	});
 
 	app.service('fieldService', function($q){
@@ -130,16 +103,64 @@
 		};
 	}]);
 
-	angular.formatter('percent', {
-		parse: function(value) {
-			var m = value.match(/^(\d+)\/(\d+)/);
-			if (m != null)
-				return angular.filter.number(parseInt(m[1])/parseInt(m[2]), 2);
-			return angular.filter.number(parseFloat(value)/100, 2);
-		},
-		format: function(value) {
-			return angular.filter.number(parseFloat(value)*100, 0);
-		},
-	});
+	function calculate(fieldData){
+		console.log("calculating values");
+		calcHayTypes(fieldData);
+		calcLab(fieldData);
+		calcProcessing(fieldData);
+		return fieldData;
+
+		function calcHayTypes(fieldData){
+			_.each(fieldData.hayTypes, function(h){
+				var pmin = new BigNumber(h.protMin);
+				var pmax = new BigNumber(h.protMax);
+				var avgProt = pmin.add(pmax).dividedBy(2); // (h.protMin + h.protMax) / 2;
+
+
+				h.lbsPerProt = fieldData.hayLbs * fieldData.dm * avgProt;
+				h.basePrice = h.deliver / h.lbsPerProt;
+			});
+		}
+
+		function calcLab(fieldData){
+			var lab = fieldData.lab;
+			lab.protPerTon = lab.lbs * lab.dm * lab.prot;
+		}
+
+		function calcProcessing(fieldData){
+			var d = fieldData;
+			var basePrice = getHayBasePrice(d.prot);
+
+			d.tonPerAcre = d.swathTons / d.swathAcre;
+			d.costPerAcre = d.swatchCost / d.tonPerAcre;
+			d.costPerTon = d.costPerAcre + d.chop + d. mileage + d.innoculant + d.adfTest;
+			d.costPerProt = d.costPerTon / d.lab.protPerTon;
+			d.costLbProt = basePrice - d.costPerProt;
+
+			d.costHayPerTon = d.costLbProt * d.lab.protPerTon;
+
+			d.totalCost = d.costHayPerTon * d.swathTons;
+
+			d.shareCost = d.totalCost * d.sharePct;
+		}
+
+		function getHayBasePrice(labProt){
+			var hay = findHayForLabProt(fieldData);
+			if (!hay){
+				hay = _.first(fieldData.hayTypes);
+			}
+			return hay.basePrice;
+		}
+	}
+
+	function findHayForLabProt(fieldData){
+		var labProt = fieldData.lab.prot;
+		var hay = _.find(fieldData.hayTypes, function(h){
+			return h.protMin <= labProt && h.protMax > labProt;
+		});
+		return hay;
+
+	}
+
 
 }());

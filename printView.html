@@ -1,0 +1,134 @@
+<div class="container-fluid" >
+	<a class="hidden-print pull-right btn" href="#/">Return to Editor</a>
+	<h1>{{field.data.title}}</h1>
+	<h2>{{field.data.desc}}</h2>
+	<hr/>
+	<div class="row" ng-repeat="hay in field.data.selectedHayType">
+		<div class="col-xs-2">
+			<strong>{{hay.title}}</strong>
+		</div>
+		<div class="col-xs-10 form-inline form-group-sm">
+			<div class=" row">
+				<label class="col-xs-6">Protein</label>
+				<span class="col-xs-4" >{{hay.protMin|percentage}} to {{hay.protMax|percentage}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Delivered $</label>
+				<span class="col-xs-4">{{hay.deliver}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">lbs * DM * Protein </label>
+				<span  class="col-xs-4">{{hay.lbsPerProt|number:0}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Base per lb. Protein $</label>
+				<span readonly class="col-xs-4">{{hay.basePrice | currency:'$':4}}</span>
+			</div>
+		</div>
+	</div>
+	<hr />
+	<div class="row">
+		<div class="col-xs-2">
+			<h4>Lab Test</h4>
+		</div>
+		<div class="col-xs-10 form-inline">
+			<div class=" row">
+				<label class="col-xs-6">Lbs. Hay</label>
+				<span class="col-xs-4"  >{{field.data.lab.lbs}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Dry Matter</label>
+				<span class="col-xs-4">{{field.data.lab.dm}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Protein</label>
+				<span class="col-xs-4" >{{field.data.lab.prot}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">lbs protein per ton of Haylage</label>
+				<span class="col-xs-4" >{{field.data.lab.protPerTon}}</span>
+			</div>
+		</div>
+	</div>
+	<hr/>
+	<div class="row">
+		<div class="col-xs-2">
+			<h4>Processing Costs</h4>
+		</div>
+		<div class="col-xs-10 form-inline">
+			<div class=" row">
+				<label class="col-xs-6">Swathing Tons</label>
+				<span class="col-xs-4">{{field.data.swathTons}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Swathing Acres</label>
+				<span class="col-xs-4">{{field.data.swathAcre}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Tons/Acre</label>
+				<span class="col-xs-4">{{field.data.tonPerAcre | number:4}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Swatch Cost Per Acre</label>
+				<span class="col-xs-4">{{field.data.swatchCost}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Cost per Acre</label>
+				<span class="col-xs-4">{{field.data.costPerAcre | currency:'$':2}}</span>
+			</div>
+			<br/>
+			<div class=" row">
+				<label class="col-xs-6">Chopping & Bagging</label>
+				<span class="col-xs-4">{{field.data.chop | currency}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Additional Mileage</label>
+				<span class="col-xs-4">{{field.data.mileage | currency}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Innoculant</label>
+				<span class="col-xs-4">{{field.data.innoculant | currency}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Protein, ADF Test</label>
+				<span class="col-xs-4">{{field.data.adfTest | currency}}</span>
+			</div>
+			<div class=" row">
+				<label class="col-xs-6">Total Costs per Ton</label>
+				<span class="col-xs-4">{{field.data.costPerTon | currency:'$':4}}</span>
+			</div>
+			<br/>
+			<div class=" row">
+				<label class="col-xs-6">Cost per lbs Protein</label>
+				<span class="col-xs-4">{{field.data.costPerProt | currency:'$':4}}</span>
+			</div>
+
+			<div class=" row">
+				<label class="col-xs-6">Cost per lbs Protein</label>
+				<span class="col-xs-4">{{field.data.costLbProt | currency:'$':4}}</span>
+			</div>
+
+			<div class=" row">
+				<label class="col-xs-6">Price of Hay per Ton</label>
+				<span class="col-xs-4">{{field.data.costHayPerTon | currency}}</span>
+			</div>
+		</div>
+	</div>
+	<hr/>
+	<div class="row">
+		<div class="col-xs-2">
+			<h4>Final Costs</h4>
+		</div>
+		<div class="col-xs-10 form-inline">
+			<div class=" row lead">
+				<label class="col-xs-6">Total Cost</label>
+				<span class="col-xs-4">{{field.data.totalCost | currency}}</span>
+			</div>
+			<div class=" row lead">
+				<label class="col-xs-6">{{field.data.sharePct|percentage}} to Farmer</label>
+				<span class="col-xs-4">{{field.data.shareCost | currency}}</span>
+			</div>
+		</div>
+	</div>
+
+</div>

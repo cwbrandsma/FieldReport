@@ -5,4 +5,6 @@
 		box-shadow: none !important;
 		outline: none !important;
 	}
+	hr{margin:0;}
+	.hidden-print{display:none;}
 }
