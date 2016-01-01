@@ -149,6 +149,8 @@
 
 			d.tonPerAcre = new BigNumber(d.swathTons).dividedBy(d.swathAcre);
 			d.costPerAcre = new BigNumber(d.swatchCost).dividedBy(d.tonPerAcre);
+			console.log('cost per acre '+ d.costPerAcre);
+
 			d.costPerTon = d.costPerAcre + d.chop + d. mileage + d.innoculant + d.adfTest;
 			d.costPerProt = new BigNumber(d.costPerTon).dividedBy(d.lab.protPerTon);
 			d.costLbProt = basePrice - d.costPerProt;
