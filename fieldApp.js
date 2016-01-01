@@ -129,8 +129,9 @@
 				var pmax = new BigNumber(h.protMax);
 				var avgProt = pmin.add(pmax).dividedBy(2); // (h.protMin + h.protMax) / 2;
 
-
-				h.lbsPerProt = fieldData.hayLbs * fieldData.dm * avgProt;
+				var lbs = 2000; // fieldData.hayLbs
+				var dm = 0.88; // fieldData.dm
+				h.lbsPerProt = lbs * dm * avgProt;
 				h.basePrice = h.deliver / h.lbsPerProt;
 			});
 		}
