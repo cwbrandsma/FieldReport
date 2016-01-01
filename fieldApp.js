@@ -145,7 +145,10 @@
 
 		function calcProcessing(fieldData){
 			var d = fieldData;
-			var basePrice = getHayBasePrice(d.prot);
+			var hayType = getHayTypeForProtein(d.prot);
+
+			d.hayTypeName = hayType.title;
+			var basePrice = hayType.basePrice;
 
 			d.tonPerAcre = new BigNumber(d.swathTons).dividedBy(d.swathAcre).toString();
 			d.costPerAcre = new BigNumber(d.swatchCost).dividedBy(d.tonPerAcre).toString();
@@ -162,12 +165,12 @@
 			d.shareCost = new BigNumber(d.totalCost).times(d.sharePct).toString();
 		}
 
-		function getHayBasePrice(labProt){
+		function getHayTypeForProtein(labProt){
 			var hay = findHayForLabProt(fieldData);
 			if (!hay){
 				hay = _.first(fieldData.hayTypes);
 			}
-			return hay.basePrice;
+			return hay;
 		}
 	}
 
