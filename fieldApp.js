@@ -132,34 +132,34 @@
 
 				var lbs = 2000; // fieldData.hayLbs
 				var dm = 0.88; // fieldData.dm
-				h.lbsPerProt = new BigNumber(lbs).times(dm).times(avgProt);
-				h.basePrice = new BigNumber(h.deliver).dividedBy(h.lbsPerProt);
+				h.lbsPerProt = new BigNumber(lbs).times(dm).times(avgProt).toString();
+				h.basePrice = new BigNumber(h.deliver).dividedBy(h.lbsPerProt).toString();
 
 			});
 		}
 
 		function calcLab(fieldData){
 			var lab = fieldData.lab;
-			lab.protPerTon = lab.lbs * lab.dm * lab.prot;
+			lab.protPerTon = new BigNumber(lab.lbs).times(lab.dm).times(lab.prot).toString();
 		}
 
 		function calcProcessing(fieldData){
 			var d = fieldData;
 			var basePrice = getHayBasePrice(d.prot);
 
-			d.tonPerAcre = new BigNumber(d.swathTons).dividedBy(d.swathAcre);
-			d.costPerAcre = new BigNumber(d.swatchCost).dividedBy(d.tonPerAcre);
+			d.tonPerAcre = new BigNumber(d.swathTons).dividedBy(d.swathAcre).toString();
+			d.costPerAcre = new BigNumber(d.swatchCost).dividedBy(d.tonPerAcre).toString();
 			console.log('cost per acre '+ d.costPerAcre);
 
-			d.costPerTon = d.costPerAcre + d.chop + d. mileage + d.innoculant + d.adfTest;
-			d.costPerProt = new BigNumber(d.costPerTon).dividedBy(d.lab.protPerTon);
-			d.costLbProt = basePrice - d.costPerProt;
+			d.costPerTon = new BigNumber(d.costPerAcre).plus(d.chop).plus(d.mileage).plus(d.innoculant).plus(d.adfTest).toString();
+			d.costPerProt = new BigNumber(d.costPerTon).dividedBy(d.lab.protPerTon).toString();
+			d.costLbProt = new BigNumber(basePrice).minus(d.costPerProt).toString();
 
-			d.costHayPerTon = d.costLbProt * d.lab.protPerTon;
+			d.costHayPerTon = new BigNumber(d.costLbProt).times(d.lab.protPerTon).toString();
 
-			d.totalCost = d.costHayPerTon * d.swathTons;
+			d.totalCost = new BigNumber(d.costHayPerTon).times(d.swathTons).toString();
 
-			d.shareCost = d.totalCost * d.sharePct;
+			d.shareCost = new BigNumber(d.totalCost).times(d.sharePct).toString();
 		}
 
 		function getHayBasePrice(labProt){
