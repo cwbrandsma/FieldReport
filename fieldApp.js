@@ -128,11 +128,13 @@
 				var pmin = new BigNumber(h.protMin);
 				var pmax = new BigNumber(h.protMax);
 				var avgProt = pmin.add(pmax).dividedBy(2); // (h.protMin + h.protMax) / 2;
+				console.log("" + pmin + ": avgProt="+ avgProt);
 
 				var lbs = 2000; // fieldData.hayLbs
 				var dm = 0.88; // fieldData.dm
-				h.lbsPerProt = lbs * dm * avgProt;
-				h.basePrice = h.deliver / h.lbsPerProt;
+				h.lbsPerProt = new BigNumber(lbs * dm * avgProt);
+				h.basePrice = new BigNumber(h.deliver).dividedBy(h.lbsPerProt);
+
 			});
 		}
 
@@ -145,10 +147,10 @@
 			var d = fieldData;
 			var basePrice = getHayBasePrice(d.prot);
 
-			d.tonPerAcre = d.swathTons / d.swathAcre;
-			d.costPerAcre = d.swatchCost / d.tonPerAcre;
+			d.tonPerAcre = new BigNumber(d.swathTons).dividedBy(d.swathAcre);
+			d.costPerAcre = new BigNumber(d.swatchCost).dividedBy(d.tonPerAcre);
 			d.costPerTon = d.costPerAcre + d.chop + d. mileage + d.innoculant + d.adfTest;
-			d.costPerProt = d.costPerTon / d.lab.protPerTon;
+			d.costPerProt = new BigNumber(d.costPerTon).dividedBy(d.lab.protPerTon);
 			d.costLbProt = basePrice - d.costPerProt;
 
 			d.costHayPerTon = d.costLbProt * d.lab.protPerTon;
