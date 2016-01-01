@@ -132,7 +132,7 @@
 
 				var lbs = 2000; // fieldData.hayLbs
 				var dm = 0.88; // fieldData.dm
-				h.lbsPerProt = new BigNumber(lbs * dm * avgProt);
+				h.lbsPerProt = new BigNumber(lbs).times(dm).times(avgProt);
 				h.basePrice = new BigNumber(h.deliver).dividedBy(h.lbsPerProt);
 
 			});
